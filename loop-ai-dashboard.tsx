@@ -37,6 +37,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { AppDownloadModal } from "./components/app-download-modal"
+import { BuyLimitModal } from "./components/buy-limit-modal"
 
 export default function Component() {
   const [isDark, setIsDark] = useState(false)
@@ -46,6 +48,8 @@ export default function Component() {
   const [isSmallScreen, setIsSmallScreen] = useState(false)
   const [showChat, setShowChat] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
+  const [showDownloadModal, setShowDownloadModal] = useState(false)
+  const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const inputContainerRef = useRef<HTMLDivElement>(null)
   const [selectedAgent, setSelectedAgent] = useState("Loop Pro")
@@ -92,7 +96,7 @@ export default function Component() {
     setSidebarOpen(!sidebarOpen)
   }
 
-  const handleNewChat = () => {
+  const handleNewTask = () => {
     setShowChat(false)
     setMessages([
       {
@@ -140,6 +144,14 @@ export default function Component() {
     if (inputRef.current) {
       inputRef.current.focus()
     }
+  }
+
+  const handleDownloadApp = () => {
+    setShowDownloadModal(true)
+  }
+
+  const handleBuyLimit = () => {
+    setShowBuyLimitModal(true)
   }
 
   const tasks = [
@@ -239,10 +251,10 @@ export default function Component() {
   )
 
   // New Chat button component - reused in both sidebar and header
-  const NewChatButton = ({ className = "", iconOnly = false }) => (
-    <Button className={`bg-blue-500 hover:bg-blue-600 text-white ${className}`} onClick={handleNewChat}>
+  const NewTaskButton = ({ className = "", iconOnly = false }) => (
+    <Button className={`bg-blue-500 hover:bg-blue-600 text-white ${className}`} onClick={handleNewTask}>
       <Plus className={`${iconOnly ? "w-5 h-5" : "w-4 h-4 mr-2"}`} />
-      {!iconOnly && "New Chat"}
+      {!iconOnly && "New Task"}
     </Button>
   )
 
@@ -299,7 +311,7 @@ export default function Component() {
         {/* New Chat Button - Only when expanded */}
         {sidebarOpen && (
           <div className="p-3 border-b border-gray-200 dark:border-zinc-700">
-            <NewChatButton className="w-full justify-center" />
+            <NewTaskButton className="w-full justify-center" />
           </div>
         )}
 
@@ -360,6 +372,10 @@ export default function Component() {
                   <UserCircle className="w-4 h-4 text-gray-500" />
                   <span>My Startup Profile</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleNewTask} className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  <span>New Task</span>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -415,6 +431,7 @@ export default function Component() {
               <span className="text-gray-600 dark:text-gray-400">Daily Task Limit(0/3)</span>
             </div>
             <button
+              onClick={handleBuyLimit}
               className={`bg-blue-600 hover:bg-blue-700 text-white text-sm ${isMobile ? "py-1.5" : "py-2"} rounded`}
             >
               Buy Limit
@@ -451,7 +468,7 @@ export default function Component() {
             {!sidebarOpen && <LogoAndAgent compact={isSmallScreen} />}
 
             {/* New Chat Button - Only when sidebar is closed */}
-            {!sidebarOpen && <NewChatButton className="ml-2 hidden sm:flex" iconOnly={isSmallScreen} />}
+            {!sidebarOpen && <NewTaskButton className="ml-2 hidden sm:flex" iconOnly={isSmallScreen} />}
           </div>
 
           {/* Right Side - Action Buttons (Mobile Optimized) */}
@@ -462,7 +479,10 @@ export default function Component() {
             </Button>
 
             {/* Download App - Visible on medium screens */}
-            <button className="hidden sm:flex px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-full items-center gap-1">
+            <button
+              onClick={handleDownloadApp}
+              className="hidden sm:flex px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-full items-center gap-1"
+            >
               <Download className="w-3 h-3" />
               <span className="hidden md:inline">Download App</span>
               <span className="md:hidden">App</span>
@@ -484,12 +504,12 @@ export default function Component() {
                 <DropdownMenuLabel>Loop AI</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {!sidebarOpen && (
-                  <DropdownMenuItem onClick={handleNewChat} className="flex items-center gap-2">
+                  <DropdownMenuItem onClick={handleNewTask} className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
-                    <span>New Chat</span>
+                    <span>New Task</span>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem className="flex items-center gap-2">
+                <DropdownMenuItem onClick={handleDownloadApp} className="flex items-center gap-2">
                   <Download className="w-4 h-4" />
                   <span>Download App</span>
                 </DropdownMenuItem>
@@ -530,8 +550,8 @@ export default function Component() {
           {/* Chat UI - Only shown when chat is active */}
           {showChat && (
             <div className="flex-1 flex flex-col overflow-hidden">
-              {/* Chat Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {/* Chat Messages - Add bottom padding for fixed input */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
                 {messages.map((message, index) => (
                   <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} mb-4`}>
                     <div
@@ -558,9 +578,13 @@ export default function Component() {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
 
-              {/* Improved Chat Input */}
-              <div className="border-t border-gray-200 dark:border-zinc-800 p-3 sm:p-4">
+          {/* Fixed Chat Input - Positioned relative to main content area */}
+          {showChat && (
+            <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-zinc-800 p-3 sm:p-4 z-40">
+              <div className="max-w-4xl mx-auto">
                 <div
                   ref={inputContainerRef}
                   onClick={focusInput}
@@ -617,9 +641,9 @@ export default function Component() {
             </div>
           )}
 
-          {/* Improved Chat Input Box (Fixed Bottom) - Only shown when no chat is active */}
+          {/* Fixed Welcome Input Box - Positioned relative to main content area */}
           {!showChat && (
-            <div className="absolute bottom-4 sm:bottom-6 left-4 right-4 sm:left-6 sm:right-6">
+            <div className="absolute bottom-4 sm:bottom-6 left-4 right-4 sm:left-6 sm:right-6 z-40">
               <div className="max-w-2xl mx-auto">
                 <div
                   ref={inputContainerRef}
@@ -671,6 +695,12 @@ export default function Component() {
           )}
         </div>
       </div>
+
+      {/* App Download Modal */}
+      <AppDownloadModal isOpen={showDownloadModal} onClose={() => setShowDownloadModal(false)} />
+
+      {/* Buy Limit Modal */}
+      <BuyLimitModal isOpen={showBuyLimitModal} onClose={() => setShowBuyLimitModal(false)} />
     </div>
   )
 }
