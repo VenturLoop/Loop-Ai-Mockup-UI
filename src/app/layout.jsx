@@ -1,9 +1,6 @@
-"use client";
-
-import { Metadata } from 'next'
-import './globals.css'
-import { AppProvider, AppContext } from '@/context/AppContext.jsx';
-import { useContext } from 'react';
+// src/app/layout.jsx
+import './globals.css';
+import ClientRootLayout from '@/components/layout/client-root-layout.jsx';
 
 export const metadata = {
   title: 'Home - Loop AI Agent UI', // Updated
@@ -20,16 +17,6 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}) {
-  const { isDark } = useContext(AppContext); // Consuming isDark from AppContext
-
-  return (
-    <html lang="en" className={isDark ? 'dark' : ''}>
-      <body>
-        <AppProvider>{children}</AppProvider>
-      </body>
-    </html>
-  )
+export default function RootLayout({ children }) {
+  return <ClientRootLayout>{children}</ClientRootLayout>;
 }
