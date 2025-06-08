@@ -318,29 +318,54 @@ export default function Component() {
         {/* Navigation Items - Desktop Version */}
         {sidebarOpen && !isMobile && (
           <div className="px-4 py-3 border-b border-gray-200 dark:border-zinc-700">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer py-2 px-2 rounded hover:bg-gray-50 dark:hover:bg-zinc-800">
-                <div className="w-4 h-4 bg-blue-100 rounded flex items-center justify-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded"></div>
-                </div>
-                Updates
-                <ChevronRight className="w-4 h-4 ml-auto" />
-              </div>
-              <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer py-2 px-2 rounded hover:bg-gray-50 dark:hover:bg-zinc-800">
-                <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
-                  <div className="w-2 h-2 bg-gray-400 rounded"></div>
-                </div>
-                My Bookmarks
-                <ChevronRight className="w-4 h-4 ml-auto" />
-              </div>
-              <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer py-2 px-2 rounded hover:bg-gray-50 dark:hover:bg-zinc-800">
-                <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
-                  <div className="w-2 h-2 bg-gray-400 rounded"></div>
-                </div>
-                My Startup profile
-                <ChevronRight className="w-4 h-4 ml-auto" />
-              </div>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-between text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 h-9 px-2"
+                >
+                  <span>Quick Access</span>
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64">
+                <DropdownMenuLabel className="text-xs">Navigation</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                  <div className="w-4 h-4 bg-blue-100 rounded flex items-center justify-center">
+                    <div className="w-2 h-2 bg-blue-500 rounded"></div>
+                  </div>
+                  <span>Updates</span>
+                  <ChevronRight className="w-4 h-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                  <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
+                    <div className="w-2 h-2 bg-gray-400 rounded"></div>
+                  </div>
+                  <span>My Bookmarks</span>
+                  <ChevronRight className="w-4 h-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                  <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
+                    <div className="w-2 h-2 bg-gray-400 rounded"></div>
+                  </div>
+                  <span>My Startup Profile</span>
+                  <ChevronRight className="w-4 h-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                  <div className="w-4 h-4 bg-green-100 dark:bg-green-900/50 rounded flex items-center justify-center">
+                    <div className="w-2 h-2 bg-green-500 rounded"></div>
+                  </div>
+                  <span>Need Help</span>
+                  <ChevronRight className="w-4 h-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleNewTask} className="flex items-center gap-3 text-sm py-2">
+                  <Plus className="w-4 h-4 text-blue-500" />
+                  <span>New Task</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
 
@@ -371,6 +396,12 @@ export default function Component() {
                 <DropdownMenuItem className="flex items-center gap-2 text-sm">
                   <UserCircle className="w-4 h-4 text-gray-500" />
                   <span>My Startup Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2 text-sm">
+                  <div className="w-4 h-4 bg-green-100 dark:bg-green-900/50 rounded flex items-center justify-center">
+                    <div className="w-2 h-2 bg-green-500 rounded"></div>
+                  </div>
+                  <span>Need Help</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleNewTask} className="flex items-center gap-2">
                   <Plus className="w-4 h-4" />
