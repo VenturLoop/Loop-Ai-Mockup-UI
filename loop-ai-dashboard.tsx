@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { AppDownloadModal } from "./components/app-download-modal"
 import { BuyLimitModal } from "./components/buy-limit-modal"
+import { NeedHelpModal } from "./components/need-help-modal"
 
 export default function Component() {
   const [isDark, setIsDark] = useState(false)
@@ -50,6 +51,7 @@ export default function Component() {
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [showDownloadModal, setShowDownloadModal] = useState(false)
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
+  const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const inputContainerRef = useRef<HTMLDivElement>(null)
   const [selectedAgent, setSelectedAgent] = useState("Loop Pro")
@@ -152,6 +154,10 @@ export default function Component() {
 
   const handleBuyLimit = () => {
     setShowBuyLimitModal(true)
+  }
+
+  const handleNeedHelp = () => {
+    setShowNeedHelpModal(true)
   }
 
   const tasks = [
@@ -353,7 +359,7 @@ export default function Component() {
                   <ChevronRight className="w-4 h-4 ml-auto" />
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                <DropdownMenuItem onClick={handleNeedHelp} className="flex items-center gap-3 text-sm py-2">
                   <div className="w-4 h-4 bg-green-100 dark:bg-green-900/50 rounded flex items-center justify-center">
                     <div className="w-2 h-2 bg-green-500 rounded"></div>
                   </div>
@@ -397,7 +403,7 @@ export default function Component() {
                   <UserCircle className="w-4 h-4 text-gray-500" />
                   <span>My Startup Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2 text-sm">
+                <DropdownMenuItem onClick={handleNeedHelp} className="flex items-center gap-2 text-sm">
                   <div className="w-4 h-4 bg-green-100 dark:bg-green-900/50 rounded flex items-center justify-center">
                     <div className="w-2 h-2 bg-green-500 rounded"></div>
                   </div>
@@ -732,6 +738,9 @@ export default function Component() {
 
       {/* Buy Limit Modal */}
       <BuyLimitModal isOpen={showBuyLimitModal} onClose={() => setShowBuyLimitModal(false)} />
+
+      {/* Need Help Modal */}
+      <NeedHelpModal isOpen={showNeedHelpModal} onClose={() => setShowNeedHelpModal(false)} />
     </div>
   )
 }
