@@ -69,5 +69,8 @@
     "onlyBuiltDependencies": [
       "sharp"
     ]
+  },
+  "overrides": {
+    "sharp": "0.33.1"
   }
 }
