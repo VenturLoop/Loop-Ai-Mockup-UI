@@ -1,11 +1,9 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect, useRef } from "react"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input.jsx"
+import { Badge } from "@/components/ui/badge.jsx"
+import { Button } from "@/components/ui/button.jsx"
 import {
   ChevronDown,
   Sun,
@@ -36,10 +34,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { AppDownloadModal } from "./components/app-download-modal"
-import { BuyLimitModal } from "./components/buy-limit-modal"
-import { NeedHelpModal } from "./components/need-help-modal"
+} from "@/components/ui/dropdown-menu.jsx"
+import { AppDownloadModal } from "./components/app-download-modal.jsx"
+import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
+import { NeedHelpModal } from "./components/need-help-modal.jsx"
 
 export default function Component() {
   const [isDark, setIsDark] = useState(false)
@@ -52,8 +50,8 @@ export default function Component() {
   const [showDownloadModal, setShowDownloadModal] = useState(false)
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const inputContainerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef(null)
+  const inputContainerRef = useRef(null)
   const [selectedAgent, setSelectedAgent] = useState("Loop Pro")
 
   // Sample chat messages
@@ -135,7 +133,7 @@ export default function Component() {
     setShowChat(true)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
