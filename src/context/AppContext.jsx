@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useContext } from 'react';
 
-const AppContext = createContext();
+export const AppContext = createContext();
 
 export const useAppContext = () => useContext(AppContext);
 
