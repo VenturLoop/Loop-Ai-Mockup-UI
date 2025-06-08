@@ -4,17 +4,23 @@ import { AppProvider } from '@/context/AppContext.jsx';
 import ThemeHtmlTag from '@/components/layout/theme-html-tag.jsx';
 
 export const metadata = {
-  title: 'Home - Loop AI Agent UI',
-  description: 'Welcome to the Loop AI Agent dashboard. Manage and interact with your AI agent seamlessly.',
-  keywords: "AI agent, user interface, Loop AI, Next.js, dashboard",
+  title: "Loop AI: Your Autonomous Startup Advisor",
+  description: "Loop AI is your autonomous startup advisor—offering personalized guidance, and smart search for co-founders and investors. Get startup-specific insights, connect faster, and build smarter with AI tailored for founders.",
+  keywords: "startup advisor, AI business guidance, co-founder search, investor search, AI for founders, Loop AI, autonomous advisor, startup insights",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://loopai.example.com",
-    siteName: "Loop AI Agent UI",
-    title: "Home - Loop AI Agent UI",
-    description: "Welcome to the Loop AI Agent dashboard. Manage and interact with your AI agent seamlessly.",
-    image: "/placeholder-logo.png",
+    url: "https://loopai.app",
+    siteName: "Loop AI",
+    title: "Loop AI: Your Autonomous Startup Advisor",
+    description: "Loop AI is your autonomous startup advisor—offering personalized guidance, and smart search for co-founders and investors. Get startup-specific insights, connect faster, and build smarter with AI tailored for founders.",
+    image: "/loop-avatar.png", // Assuming this image will be in the /public directory
+  },
+  twitterCard: {
+    card: "summary_large_image",
+    title: "Loop AI: Your Autonomous Startup Advisor",
+    description: "Loop AI is your autonomous startup advisor—offering personalized guidance, and smart search for co-founders and investors.",
+    images: ["/loop-avatar.png"], // Assuming this image will be in the /public directory
   },
 };
 
