@@ -28,6 +28,7 @@ import {
   Smile,
   Paperclip,
   Mic,
+  Lightbulb,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -572,9 +573,9 @@ export default function Component() {
           {/* Welcome Screen - Only shown when no chat is active */}
           {!showChat && (
             <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-4 sm:py-8">
-              <div className="text-center max-w-xl w-full">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto rounded-full bg-zinc-300 dark:bg-zinc-600 mb-4 sm:mb-6" />
-                <p className="text-sm sm:text-base md:text-lg font-medium text-zinc-600 dark:text-zinc-400 leading-relaxed px-4">
+              <div className="text-center max-w-2xl w-full bg-slate-50 dark:bg-zinc-800/50 rounded-xl border border-slate-200 dark:border-zinc-700 p-6 sm:p-8 md:p-10 mx-auto">
+                <Lightbulb className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto text-blue-500 mb-4 sm:mb-6 md:mb-8" />
+                <p className="text-sm sm:text-base md:text-lg font-medium text-zinc-600 dark:text-zinc-400 leading-relaxed">
                   Loop AI is your smart startup companion — a powerful AI chatbot designed to connect you with the right
                   co-founders and investors. Whether you're building from scratch or scaling fast, Loop AI simplifies
                   networking.
@@ -587,7 +588,7 @@ export default function Component() {
           {showChat && (
             <div className="flex-1 flex flex-col overflow-hidden">
               {/* Chat Messages - Add bottom padding for fixed input */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32 mx-auto max-w-4xl">
                 {messages.map((message, index) => (
                   <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} mb-4`}>
                     <div
