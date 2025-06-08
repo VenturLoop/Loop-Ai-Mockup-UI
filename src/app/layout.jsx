@@ -1,3 +1,5 @@
+"use client";
+
 import { Metadata } from 'next'
 import './globals.css'
 import { AppProvider, AppContext } from '@/context/AppContext.jsx';
