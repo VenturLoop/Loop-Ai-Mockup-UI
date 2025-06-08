@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, memo, useCallback } from "react"
 import { useAppContext } from "@/context/AppContext.jsx"
 import { useIsMobile } from "@/hooks/use-mobile.jsx" // Import the hook
 import { Input } from "@/components/ui/input.jsx"
@@ -46,6 +46,7 @@ export default function Component() {
   const { isDark, toggleDarkMode, sidebarOpen, setSidebarOpen: contextSetSidebarOpen, toggleSidebar } = useAppContext()
   const isMobile = useIsMobile() // Use the hook for 768px breakpoint
   const [searchQuery, setSearchQuery] = useState("")
+  // State for tracking if the screen is below the 'sm' breakpoint (640px), used for more granular responsive adjustments.
   const [isSmallScreen, setIsSmallScreen] = useState(false) // Keep for 640px breakpoint
   const [showChat, setShowChat] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
@@ -60,11 +61,11 @@ export default function Component() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hello! I'm Loop AI, your startup companion. How can I help you today?",
+      content: "Hello! I&apos;m Loop AI, your startup companion. How can I help you today?",
     },
     {
       role: "user",
-      content: "I'm looking for a technical co-founder for my fintech startup.",
+      content: "I&apos;m looking for a technical co-founder for my fintech startup.",
     },
     {
       role: "assistant",
@@ -75,6 +76,9 @@ export default function Component() {
 
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile); // To track changes in isMobile from the hook
 
+  // Effect for managing screen size-dependent states (isSmallScreen) and sidebar behavior on mobile transitions.
+  // It checks for viewport width for 'isSmallScreen' and handles auto-closing the sidebar
+  // when transitioning from desktop to mobile view.
   useEffect(() => {
     const checkSmallScreenSize = () => {
       const small = window.innerWidth < 640
@@ -98,12 +102,12 @@ export default function Component() {
     document.documentElement.classList.toggle("dark", isDark)
   }, [isDark])
 
-  const handleNewTask = () => {
+  const handleNewTask = useCallback(() => {
     setShowChat(false)
     setMessages([
       {
         role: "assistant",
-        content: "Hello! I'm Loop AI, your startup companion. How can I help you today?",
+        content: "Hello! I&apos;m Loop AI, your startup companion. How can I help you today?",
       },
     ])
     if (isMobile && sidebarOpen) {
@@ -112,13 +116,13 @@ export default function Component() {
     if (inputRef.current) {
       inputRef.current.focus()
     }
-  }
+  }, [isMobile, sidebarOpen, toggleSidebar, setShowChat, setMessages])
 
-  const handleSendMessage = () => {
+  const handleSendMessage = useCallback(() => {
     if (!searchQuery.trim()) return
 
     // Add user message
-    setMessages([...messages, { role: "user", content: searchQuery }])
+    setMessages((prevMessages) => [...prevMessages, { role: "user", content: searchQuery }])
 
     // Simulate AI response after a short delay
     setTimeout(() => {
@@ -126,40 +130,41 @@ export default function Component() {
         ...prev,
         {
           role: "assistant",
-          content: `I'll help you with "${searchQuery}". What specific details would you like to know?`,
+          content: `I&apos;ll help you with "${searchQuery}". What specific details would you like to know?`,
         },
       ])
     }, 1000)
 
     setSearchQuery("")
     setShowChat(true)
-  }
+  }, [searchQuery, setMessages, setSearchQuery, setShowChat])
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
     }
-  }
+  }, [handleSendMessage])
 
-  const focusInput = () => {
+  const focusInput = useCallback(() => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
-  }
+  }, [])
 
-  const handleDownloadApp = () => {
+  const handleDownloadApp = useCallback(() => {
     setShowDownloadModal(true)
-  }
+  }, [setShowDownloadModal])
 
-  const handleBuyLimit = () => {
+  const handleBuyLimit = useCallback(() => {
     setShowBuyLimitModal(true)
-  }
+  }, [setShowBuyLimitModal])
 
-  const handleNeedHelp = () => {
+  const handleNeedHelp = useCallback(() => {
     setShowNeedHelpModal(true)
-  }
+  }, [setShowNeedHelpModal])
 
+  // Sample data for the "Latest Tasks" list in the sidebar.
   const tasks = [
     {
       title: "Warning Messages Samples",
@@ -190,30 +195,48 @@ export default function Component() {
   ]
 
   // Logo and Agent component - reused in both sidebar and header
-  const LogoAndAgent = ({ compact = false }) => (
-    <div className="flex items-center gap-2">
-      <Grid3X3 className="w-5 h-5" />
-      <span className={`text-lg font-semibold ${compact ? "hidden xs:inline" : ""}`}>Loop</span>
-      {!compact && (
+  function LogoAndAgentComponent({ compact = false, selectedAgent, setSelectedAgent }) {
+    const agentDisplayName = selectedAgent === "Loop Pro" ? "Agent 11" : "Agent 5";
+    const agentCompactDisplayName = selectedAgent === "Loop Pro" ? "A11" : "A5";
+
+    const handleSetLoopPro = useCallback(() => setSelectedAgent("Loop Pro"), [setSelectedAgent]);
+    const handleSetLoopMini = useCallback(() => setSelectedAgent("Loop Mini"), [setSelectedAgent]);
+
+    return (
+      <div className="flex items-center gap-2">
+        <Grid3X3 className="w-5 h-5" />
+        <span className={`text-lg font-semibold ${compact ? "hidden xs:inline" : ""}`}>Loop</span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded flex items-center gap-1 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">
-              {selectedAgent === "Loop Pro" ? "Agent 11" : "Agent 5"}
-              <ChevronDown className="w-3 h-3" />
+              {compact ? (
+                <>
+                  <span className="xs:hidden">{agentCompactDisplayName}</span>
+                  <span className="hidden xs:inline flex items-center gap-1">
+                    {agentDisplayName}
+                    <ChevronDown className="w-3 h-3" />
+                  </span>
+                </>
+              ) : (
+                <>
+                  {agentDisplayName}
+                  <ChevronDown className="w-3 h-3" />
+                </>
+              )}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-32">
             <DropdownMenuLabel className="text-xs">Select Agent</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => setSelectedAgent("Loop Pro")}
+              onClick={handleSetLoopPro}
               className="text-xs flex items-center justify-between"
             >
               <span>Loop Pro</span>
               {selectedAgent === "Loop Pro" && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setSelectedAgent("Loop Mini")}
+              onClick={handleSetLoopMini}
               className="text-xs flex items-center justify-between"
             >
               <span>Loop Mini</span>
@@ -221,48 +244,19 @@ export default function Component() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )}
-      {compact && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">
-              <span className="xs:hidden">{selectedAgent === "Loop Pro" ? "A11" : "A5"}</span>
-              <span className="hidden xs:inline flex items-center gap-1">
-                {selectedAgent === "Loop Pro" ? "Agent 11" : "Agent 5"}
-                <ChevronDown className="w-3 h-3" />
-              </span>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-32">
-            <DropdownMenuLabel className="text-xs">Select Agent</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => setSelectedAgent("Loop Pro")}
-              className="text-xs flex items-center justify-between"
-            >
-              <span>Loop Pro</span>
-              {selectedAgent === "Loop Pro" && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setSelectedAgent("Loop Mini")}
-              className="text-xs flex items-center justify-between"
-            >
-              <span>Loop Mini</span>
-              {selectedAgent === "Loop Mini" && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
-    </div>
-  )
-
+      </div>
+    );
+  }
+  const LogoAndAgent = memo(LogoAndAgentComponent);
+  LogoAndAgent.displayName = "LogoAndAgent";
   // New Chat button component - reused in both sidebar and header
-  const NewTaskButton = ({ className = "", iconOnly = false }) => (
+  const NewTaskButton = memo(({ className = "", iconOnly = false }) => (
     <Button className={`bg-blue-500 hover:bg-blue-600 text-white ${className}`} onClick={handleNewTask}>
       <Plus className={`${iconOnly ? "w-5 h-5" : "w-4 h-4 mr-2"}`} />
       {!iconOnly && "New Task"}
     </Button>
-  )
+  ));
+  NewTaskButton.displayName = "NewTaskButton";
 
   return (
     <div className="flex h-screen w-full bg-white dark:bg-black text-black dark:text-white overflow-hidden">
@@ -297,7 +291,7 @@ export default function Component() {
           {/* Logo and Agent - Only when expanded */}
           {sidebarOpen && (
             <div className="flex items-center gap-2 flex-1 ml-2 overflow-hidden">
-              <LogoAndAgent />
+              <LogoAndAgent selectedAgent={selectedAgent} setSelectedAgent={setSelectedAgent} />
             </div>
           )}
 
@@ -502,7 +496,7 @@ export default function Component() {
             )}
 
             {/* Logo and Agent - Only when sidebar is closed */}
-            {!sidebarOpen && <LogoAndAgent compact={isSmallScreen} />}
+            {!sidebarOpen && <LogoAndAgent compact={isSmallScreen} selectedAgent={selectedAgent} setSelectedAgent={setSelectedAgent} />}
 
             {/* New Chat Button - Only when sidebar is closed */}
             {!sidebarOpen && <NewTaskButton className="ml-2 hidden sm:flex" iconOnly={isSmallScreen} />}
@@ -577,7 +571,7 @@ export default function Component() {
                 <Lightbulb className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto text-blue-500 mb-4 sm:mb-6 md:mb-8" />
                 <p className="text-sm sm:text-base md:text-lg font-medium text-zinc-600 dark:text-zinc-400 leading-relaxed">
                   Loop AI is your smart startup companion — a powerful AI chatbot designed to connect you with the right
-                  co-founders and investors. Whether you're building from scratch or scaling fast, Loop AI simplifies
+                  co-founders and investors. Whether you&apos;re building from scratch or scaling fast, Loop AI simplifies
                   networking.
                 </p>
               </div>
@@ -696,7 +690,7 @@ export default function Component() {
                   <div className="flex items-center gap-2 sm:gap-3 mb-3">
                     <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
                     <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                      Ask Loop "Find a cofounder"
+                      Ask Loop &quot;Find a cofounder&quot;
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
