@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useAppContext } from "@/context/AppContext.jsx"
+import { useIsMobile } from "@/hooks/use-mobile.jsx" // Import the hook
 import { Input } from "@/components/ui/input.jsx"
 import { Badge } from "@/components/ui/badge.jsx"
 import { Button } from "@/components/ui/button.jsx"
@@ -40,11 +42,10 @@ import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
 import { NeedHelpModal } from "./components/need-help-modal.jsx"
 
 export default function Component() {
-  const [isDark, setIsDark] = useState(false)
+  const { isDark, toggleDarkMode, sidebarOpen, setSidebarOpen: contextSetSidebarOpen, toggleSidebar } = useAppContext()
+  const isMobile = useIsMobile() // Use the hook for 768px breakpoint
   const [searchQuery, setSearchQuery] = useState("")
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
+  const [isSmallScreen, setIsSmallScreen] = useState(false) // Keep for 640px breakpoint
   const [showChat, setShowChat] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [showDownloadModal, setShowDownloadModal] = useState(false)
@@ -71,30 +72,30 @@ export default function Component() {
     },
   ])
 
+  const [prevIsMobile, setPrevIsMobile] = useState(isMobile); // To track changes in isMobile from the hook
+
   useEffect(() => {
-    const checkScreenSize = () => {
-      const mobile = window.innerWidth < 768
+    const checkSmallScreenSize = () => {
       const small = window.innerWidth < 640
-      setIsMobile(mobile)
       setIsSmallScreen(small)
-      if (mobile && !isMobile) {
-        setSidebarOpen(false)
-      }
     }
 
-    checkScreenSize()
-    window.addEventListener("resize", checkScreenSize)
-    return () => window.removeEventListener("resize", checkScreenSize)
-  }, [isMobile])
+    // Handle closing sidebar when transitioning to mobile view
+    if (isMobile && !prevIsMobile && sidebarOpen) {
+      contextSetSidebarOpen(false);
+    }
+    setPrevIsMobile(isMobile); // Update previous mobile state
 
-  const toggleDarkMode = () => {
-    setIsDark(!isDark)
-    document.documentElement.classList.toggle("dark")
-  }
+    checkSmallScreenSize() // Initial check for small screen
+    window.addEventListener("resize", checkSmallScreenSize) // Only for small screen
+    return () => {
+      window.removeEventListener("resize", checkSmallScreenSize)
+    }
+  }, [isMobile, prevIsMobile, sidebarOpen, contextSetSidebarOpen])
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
-  }
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark)
+  }, [isDark])
 
   const handleNewTask = () => {
     setShowChat(false)
@@ -104,8 +105,8 @@ export default function Component() {
         content: "Hello! I'm Loop AI, your startup companion. How can I help you today?",
       },
     ])
-    if (isMobile) {
-      setSidebarOpen(false)
+    if (isMobile && sidebarOpen) {
+      toggleSidebar() // Use context toggle
     }
     if (inputRef.current) {
       inputRef.current.focus()
@@ -266,7 +267,7 @@ export default function Component() {
     <div className="flex h-screen w-full bg-white dark:bg-black text-black dark:text-white overflow-hidden">
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={toggleSidebar} />
       )}
 
       {/* Sidebar */}
@@ -304,7 +305,7 @@ export default function Component() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSidebarOpen(false)}
+              onClick={toggleSidebar} // Use context toggle
               className="h-8 w-8 md:hidden ml-2"
             >
               <X className="w-4 h-4" />

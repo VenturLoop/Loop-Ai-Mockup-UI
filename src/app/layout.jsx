@@ -5,7 +5,16 @@ import { AppProvider } from '@/context/AppContext.jsx';
 export const metadata = {
   title: 'Loop AI Agent UI',
   description: 'A Next.js application for the Loop AI Agent.',
-  // Add other relevant SEO metadata like keywords, openGraph, etc.
+  keywords: "AI agent, user interface, Loop AI, Next.js, dashboard",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://loopai.example.com",
+    siteName: "Loop AI Agent UI",
+    title: "Loop AI Agent UI",
+    description: "A Next.js application for the Loop AI Agent.",
+    image: "/placeholder-logo.png",
+  },
 };
 
 export default function RootLayout({
