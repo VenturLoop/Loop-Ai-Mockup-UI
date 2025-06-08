@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import './globals.css'
-import { AppProvider } from '@/context/AppContext.jsx';
+import { AppProvider, AppContext } from '@/context/AppContext.jsx';
+import { useContext } from 'react';
 
 export const metadata = {
   title: 'Home - Loop AI Agent UI', // Updated
@@ -20,8 +21,10 @@ export const metadata = {
 export default function RootLayout({
   children,
 }) {
+  const { isDark } = useContext(AppContext); // Consuming isDark from AppContext
+
   return (
-    <html lang="en">
+    <html lang="en" className={isDark ? 'dark' : ''}>
       <body>
         <AppProvider>{children}</AppProvider>
       </body>

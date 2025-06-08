@@ -90,5 +90,15 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    transition-property: background-color, color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+  }
+
+  .card,
+  .primary {
+    transition-property: background-color, color, border-color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
   }
 }
