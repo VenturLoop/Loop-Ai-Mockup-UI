@@ -6,6 +6,9 @@ import * as React from "react"
 import "@/components/ui/toast.jsx" // Assuming this is where ToastProps and ToastActionElement would be defined if needed
 
 const TOAST_LIMIT = 1
+// Defines the delay (in milliseconds) before a toast is removed from the state *after* it has been dismissed.
+// The current very large value (e.g., 1,000,000ms) means toasts are not automatically removed soon after dismissal
+// by this timer alone, relying more on manual dismissal or onOpenChange events for visual hiding.
 const TOAST_REMOVE_DELAY = 1000000
 
 const actionTypes = {

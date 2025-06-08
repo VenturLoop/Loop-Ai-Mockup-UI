@@ -59,7 +59,7 @@ export function NeedHelpModal({ isOpen, onClose }) {
 
           {/* Compact Help Text */}
           <div className="text-center mb-4">
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Choose how you'd like to get support</p>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Choose how you&apos;d like to get support</p>
           </div>
 
           {/* Compact Support Options */}
