@@ -6,7 +6,7 @@ import {
   DialogTitle,
   // DialogDescription, // No longer needed here as it's not used
 } from "@/components/ui/dialog.jsx";
-// Button import is already there and will be used later
+import { Button } from "@/components/ui/button.jsx";
 // X import is not actively used but was part of the initial scaffold, keeping for now.
 
 const LimitUsageModal = ({ isOpen, onClose }) => {
