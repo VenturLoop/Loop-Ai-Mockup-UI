@@ -91,8 +91,7 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-2xl md:max-w-3xl lg:max-w-4xl bg-white dark:bg-gray-900 rounded-lg shadow-xl"
-        data-state-open="overflow-y-auto"
+        className="w-[calc(100%-2rem)] sm:w-full max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[85vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-lg shadow-xl"
       >
         <DialogHeader className="p-6">
           <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100">My Startup Profile</DialogTitle>
