@@ -15,24 +15,23 @@ const MyBookmarksModal = ({ isOpen, onClose }) => {
   ];
 
   const renderContent = () => {
-    const contentBaseClass = "p-4 min-h-[200px] flex items-center justify-center";
-    const animationClass = "animate-fadeIn"; // Defined in Tailwind config
+    const contentBaseClass = "p-4 min-h-[60vh] max-h-[65vh] overflow-y-auto";
+    // const animationClass = "animate-fadeIn"; // Defined in Tailwind config - Removed as content is now simpler
 
-    switch (activeTab) {
-      case 'founder':
-        return <div key="founder" className={`${contentBaseClass} ${animationClass}`}><p className="text-gray-500 dark:text-gray-400">List of bookmarked founder profiles.</p></div>;
-      case 'investor':
-        return <div key="investor" className={`${contentBaseClass} ${animationClass}`}><p className="text-gray-500 dark:text-gray-400">List of bookmarked investor profiles.</p></div>;
-      case 'projects':
-        return <div key="projects" className={`${contentBaseClass} ${animationClass}`}><p className="text-gray-500 dark:text-gray-400">List of saved projects.</p></div>;
-      default:
-        return null;
-    }
+    // Placeholder for actual content.
+    // In a real application, this would fetch and display data based on the activeTab.
+    return (
+      <div key={activeTab} className={`${contentBaseClass}`}>
+        <p className="text-gray-500 dark:text-gray-400">
+          Content for {tabs.find(tab => tab.id === activeTab)?.label} will be displayed here.
+        </p>
+      </div>
+    );
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl w-full p-0 bg-white dark:bg-gray-900 rounded-lg shadow-xl overflow-hidden">
+      <DialogContent className="max-w-xl w-full p-0 bg-white dark:bg-gray-900 rounded-lg shadow-xl overflow-hidden mx-4 sm:mx-0">
         <DialogHeader className="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 dark:border-zinc-700">
           <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             My Bookmarks
@@ -60,11 +59,9 @@ const MyBookmarksModal = ({ isOpen, onClose }) => {
           {renderContent()}
         </div>
 
-        <div className="px-4 py-3 sm:px-6 sm:py-4 border-t border-gray-200 dark:border-zinc-700 flex justify-end">
-          <Button variant="outline" onClick={onClose} className="dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
-            Close
-          </Button>
-        </div>
+        {/* The Dialog component handles closing via onOpenChange, so an explicit button is often not needed,
+            or can be placed inside the DialogHeader or DialogFooter if provided by the component.
+            For now, removing the explicit "Close" button and its container. */}
       </DialogContent>
     </Dialog>
   );
