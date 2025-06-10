@@ -41,6 +41,7 @@ import {
 import { AppDownloadModal } from "./components/app-download-modal.jsx"
 import LoginModal from "./components/modals/LoginModal.jsx";
 import MyBookmarksModal from "./components/modals/MyBookmarksModal.jsx"; // Added import
+import MyUpdatesModal from "./components/modals/MyUpdatesModal.jsx"; // Added import
 import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
 import { NeedHelpModal } from "./components/need-help-modal.jsx"
 
@@ -55,6 +56,7 @@ export default function Component() {
   const [showDownloadModal, setShowDownloadModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showMyBookmarksModal, setShowMyBookmarksModal] = useState(false); // Added state
+  const [showMyUpdatesModal, setShowMyUpdatesModal] = useState(false); // Added state
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
   const inputRef = useRef(null)
@@ -340,7 +342,7 @@ export default function Component() {
               <DropdownMenuContent align="start" className="w-64">
                 <DropdownMenuLabel className="text-xs">Navigation</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                <DropdownMenuItem onClick={() => setShowMyUpdatesModal(true)} className="flex items-center gap-3 text-sm py-2">
                   <div className="w-4 h-4 bg-blue-100 rounded flex items-center justify-center">
                     <div className="w-2 h-2 bg-blue-500 rounded"></div>
                   </div>
@@ -394,7 +396,7 @@ export default function Component() {
               <DropdownMenuContent align="start" className="w-56">
                 <DropdownMenuLabel className="text-xs">Navigation</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="flex items-center gap-2 text-sm">
+                <DropdownMenuItem onClick={() => setShowMyUpdatesModal(true)} className="flex items-center gap-2 text-sm">
                   <Bell className="w-4 h-4 text-blue-500" />
                   <span>Updates</span>
                 </DropdownMenuItem>
@@ -756,6 +758,11 @@ export default function Component() {
       <MyBookmarksModal
         isOpen={showMyBookmarksModal}
         onClose={() => setShowMyBookmarksModal(false)}
+      />
+      {/* My Updates Modal */}
+      <MyUpdatesModal
+        isOpen={showMyUpdatesModal}
+        onClose={() => setShowMyUpdatesModal(false)}
       />
     </div>
   )
