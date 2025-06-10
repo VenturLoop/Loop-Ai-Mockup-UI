@@ -91,9 +91,9 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="w-[calc(100%-2rem)] sm:w-full max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[85vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-lg shadow-xl scrollbar-hide"
+        className="w-[calc(100%-2rem)] sm:w-full max-w-xl max-h-[85vh] overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-900 rounded-lg shadow-xl scrollbar-hide"
       >
-        <DialogHeader className="p-6">
+        <DialogHeader className="px-4 sm:px-6 pt-6 pb-4">
           <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100">My Startup Profile</DialogTitle>
           <DialogDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Manage your startup's information.
@@ -103,7 +103,7 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
 
         <div className="border-t border-gray-200 dark:border-gray-700"></div>
 
-        <form onSubmit={handleSave} className="p-6 space-y-6">
+        <form onSubmit={handleSave} className="px-4 sm:px-6 pt-4 pb-6 space-y-6">
           <div>
             <label htmlFor="startupName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Startup Name
