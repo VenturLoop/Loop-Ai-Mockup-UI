@@ -39,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.jsx"
 import { AppDownloadModal } from "./components/app-download-modal.jsx"
+import LoginModal from "./components/modals/LoginModal.jsx";
 import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
 import { NeedHelpModal } from "./components/need-help-modal.jsx"
 
@@ -51,6 +52,7 @@ export default function Component() {
   const [showChat, setShowChat] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [showDownloadModal, setShowDownloadModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
   const inputRef = useRef(null)
@@ -155,6 +157,11 @@ export default function Component() {
   const handleDownloadApp = useCallback(() => {
     setShowDownloadModal(true)
   }, [setShowDownloadModal])
+
+  const handleOpenAppDownloadModal = useCallback(() => {
+    setShowLoginModal(false);
+    setShowDownloadModal(true);
+  }, [setShowLoginModal, setShowDownloadModal]);
 
   const handleBuyLimit = useCallback(() => {
     setShowBuyLimitModal(true)
@@ -520,7 +527,7 @@ export default function Component() {
             </button>
 
             {/* Login - Visible on medium screens */}
-            <button className="hidden sm:flex px-3 py-1.5 text-xs border border-gray-200 dark:border-zinc-700 rounded-full hover:bg-gray-50 dark:hover:bg-zinc-800">
+            <button onClick={() => setShowLoginModal(true)} className="hidden sm:flex px-3 py-1.5 text-xs border border-gray-200 dark:border-zinc-700 rounded-full hover:bg-gray-50 dark:hover:bg-zinc-800">
               Login
             </button>
 
@@ -553,7 +560,7 @@ export default function Component() {
                   <Settings className="w-4 h-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2">
+                <DropdownMenuItem onClick={() => setShowLoginModal(true)} className="flex items-center gap-2">
                   <LogOut className="w-4 h-4" />
                   <span>Login</span>
                 </DropdownMenuItem>
@@ -729,6 +736,13 @@ export default function Component() {
 
       {/* App Download Modal */}
       <AppDownloadModal isOpen={showDownloadModal} onClose={() => setShowDownloadModal(false)} />
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onOpenAppDownloadModal={handleOpenAppDownloadModal}
+      />
 
       {/* Buy Limit Modal */}
       <BuyLimitModal isOpen={showBuyLimitModal} onClose={() => setShowBuyLimitModal(false)} />
