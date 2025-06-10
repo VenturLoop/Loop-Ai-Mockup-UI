@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu.jsx"
 import { AppDownloadModal } from "./components/app-download-modal.jsx"
 import LoginModal from "./components/modals/LoginModal.jsx";
+import MyBookmarksModal from "./components/modals/MyBookmarksModal.jsx"; // Added import
 import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
 import { NeedHelpModal } from "./components/need-help-modal.jsx"
 
@@ -53,6 +54,7 @@ export default function Component() {
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [showDownloadModal, setShowDownloadModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showMyBookmarksModal, setShowMyBookmarksModal] = useState(false); // Added state
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
   const inputRef = useRef(null)
@@ -345,7 +347,7 @@ export default function Component() {
                   <span>Updates</span>
                   <ChevronRight className="w-4 h-4 ml-auto" />
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                <DropdownMenuItem onClick={() => setShowMyBookmarksModal(true)} className="flex items-center gap-3 text-sm py-2"> {/* Added onClick */}
                   <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
                     <div className="w-2 h-2 bg-gray-400 rounded"></div>
                   </div>
@@ -396,7 +398,7 @@ export default function Component() {
                   <Bell className="w-4 h-4 text-blue-500" />
                   <span>Updates</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2 text-sm">
+                <DropdownMenuItem onClick={() => setShowMyBookmarksModal(true)} className="flex items-center gap-2 text-sm"> {/* Added onClick */}
                   <Bookmark className="w-4 h-4 text-gray-500" />
                   <span>My Bookmarks</span>
                 </DropdownMenuItem>
@@ -749,6 +751,12 @@ export default function Component() {
 
       {/* Need Help Modal */}
       <NeedHelpModal isOpen={showNeedHelpModal} onClose={() => setShowNeedHelpModal(false)} />
+
+      {/* My Bookmarks Modal */}
+      <MyBookmarksModal
+        isOpen={showMyBookmarksModal}
+        onClose={() => setShowMyBookmarksModal(false)}
+      />
     </div>
   )
 }
