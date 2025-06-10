@@ -45,6 +45,7 @@ import MyUpdatesModal from "./components/modals/MyUpdatesModal.jsx"; // Added im
 import MyStartupProfileModal from "./components/modals/MyStartupProfileModal.jsx";
 import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
 import { NeedHelpModal } from "./components/need-help-modal.jsx"
+import LimitUsageModal from "./components/modals/LimitUsageModal.jsx";
 
 export default function Component() {
   const { isDark, toggleDarkMode, sidebarOpen, setSidebarOpen: contextSetSidebarOpen, toggleSidebar } = useAppContext()
@@ -61,6 +62,7 @@ export default function Component() {
   const [showMyStartupProfileModal, setShowMyStartupProfileModal] = useState(false);
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
+  const [showLimitUsageModal, setShowLimitUsageModal] = useState(false);
   const inputRef = useRef(null)
   const inputContainerRef = useRef(null)
   const [selectedAgent, setSelectedAgent] = useState("Loop Pro")
@@ -469,20 +471,26 @@ export default function Component() {
           <div
             className={`border-t border-gray-200 dark:border-zinc-800 ${isMobile ? "p-2" : "p-4"} flex flex-col ${isMobile ? "space-y-2" : "space-y-3"}`}
           >
-            <div className="w-full bg-blue-500 rounded-full h-2">
-              <div className="bg-blue-500 h-2 rounded-full" style={{ width: "0%" }}></div>
+            <div
+              className="cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 -m-2 rounded-md"
+              onClick={() => setShowLimitUsageModal(true)}
+            >
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2"> {/* Changed to gray background */}
+                <div className="bg-blue-600 h-2 rounded-full" style={{ width: "0%" }}></div> {/* Inner bar is blue */}
+              </div>
+              <div className="flex justify-between items-center text-xs mt-1">
+                <span className="text-gray-600 dark:text-gray-400">Daily Task Limit(0/3)</span>
+              </div>
             </div>
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-gray-600 dark:text-gray-400">Daily Task Limit(0/3)</span>
-            </div>
+
             <button
               onClick={handleBuyLimit}
-              className={`bg-blue-600 hover:bg-blue-700 text-white text-sm ${isMobile ? "py-1.5" : "py-2"} rounded`}
+              className={`bg-blue-600 hover:bg-blue-700 text-white text-sm ${isMobile ? "py-1.5" : "py-2"} rounded mt-2`} // Added mt-2 for spacing
             >
               Buy Limit
             </button>
 
-            <div className={`text-xs text-gray-500 dark:text-gray-400 ${isMobile ? "space-y-0.5" : "space-y-1"}`}>
+            <div className={`text-xs text-gray-500 dark:text-gray-400 ${isMobile ? "space-y-0.5" : "space-y-1"} mt-2`}> {/* Added mt-2 */}
               {!isMobile && (
                 <div className="flex gap-2 flex-wrap">
                   <span className="hover:underline cursor-pointer">Privacy Policy</span>
@@ -787,6 +795,7 @@ export default function Component() {
         isOpen={showMyStartupProfileModal}
         onClose={() => setShowMyStartupProfileModal(false)}
       />
+      <LimitUsageModal isOpen={showLimitUsageModal} onClose={() => setShowLimitUsageModal(false)} />
     </div>
   )
 }
