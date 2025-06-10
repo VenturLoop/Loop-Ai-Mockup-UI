@@ -522,7 +522,7 @@ export default function Component() {
               href="https://test.venturloop.com/pricing"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-0.5"
+              className="hidden lg:flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-0.5"
             >
               <Sparkles className="w-4 h-4" />
               Get founder pass
@@ -539,7 +539,7 @@ export default function Component() {
             {/* Download App - Visible on medium screens */}
             <button
               onClick={handleDownloadApp}
-              className="hidden sm:flex px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-full items-center gap-1"
+              className="hidden sm:flex px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-full items-center gap-1"
             >
               <Download className="w-3 h-3" />
               <span className="hidden md:inline">Download App</span>
@@ -547,7 +547,7 @@ export default function Component() {
             </button>
 
             {/* Login - Visible on medium screens */}
-            <button onClick={() => setShowLoginModal(true)} className="hidden sm:flex px-3 py-1.5 text-xs border border-gray-200 dark:border-zinc-700 rounded-full hover:bg-gray-50 dark:hover:bg-zinc-800">
+            <button onClick={() => setShowLoginModal(true)} className="hidden sm:flex px-3 py-2 text-sm border border-gray-200 dark:border-zinc-700 rounded-full hover:bg-gray-50 dark:hover:bg-zinc-800">
               Login
             </button>
 
