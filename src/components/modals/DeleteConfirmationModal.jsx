@@ -10,7 +10,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 rounded-lg shadow-xl p-4 sm:p-6">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-md bg-white dark:bg-gray-900 rounded-lg shadow-xl p-4 sm:p-6">
         <DialogHeader className="flex items-start space-x-3"> {/* Use items-start for icon alignment if title wraps */}
           <AlertTriangle className="h-6 w-6 text-red-500 flex-shrink-0 mt-0.5" />
           <div> {/* Wrapper for title and description to align with icon */}
