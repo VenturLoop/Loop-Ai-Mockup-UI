@@ -73,7 +73,7 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
       fundingAsk,
       pitchDeckFile: pitchDeckFile ? pitchDeckFile.name : null,
     });
-    // onClose(); // Optionally close modal on save
+    onClose(); // Optionally close modal on save
   };
 
   const handleDelete = () => {
