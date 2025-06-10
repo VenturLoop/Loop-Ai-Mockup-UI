@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { UploadCloud, Trash2 } from 'lucide-react'; // Removed X
+import DeleteConfirmationModal from './DeleteConfirmationModal.jsx';
 
 const MyStartupProfileModal = ({ isOpen, onClose }) => {
   const [startupName, setStartupName] = useState('');
@@ -14,6 +15,7 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
   const [pitchDeckFile, setPitchDeckFile] = useState(null);
   const [fileError, setFileError] = useState('');
   const [pitchError, setPitchError] = useState('');
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
 
   const handleElevationPitchChange = (e) => {
     const text = e.target.value;
@@ -75,7 +77,12 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
   };
 
   const handleDelete = () => {
-    console.log("Delete action triggered. Implement data clearing logic.");
+    setShowDeleteConfirmModal(true);
+  };
+
+  const handleConfirmDeleteAction = () => {
+    // Original deletion logic (clearing form data):
+    console.log("Delete action confirmed. Clearing form data.");
     setStartupName('');
     setElevationPitch('');
     setLocation('');
@@ -85,14 +92,20 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
     setPitchDeckFile(null);
     setFileError('');
     setPitchError('');
-    // onClose(); // Optionally close modal on delete
+
+    // Close the confirmation modal
+    setShowDeleteConfirmModal(false);
+
+    // Optionally, close the main MyStartupProfileModal as well
+    // onClose(); // Uncomment if the main modal should close after deletion
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        className="w-[calc(100%-2rem)] sm:w-full max-w-xl max-h-[85vh] overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-900 rounded-lg shadow-xl scrollbar-hide"
-      >
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent
+          className="w-[calc(100%-2rem)] sm:w-full max-w-xl max-h-[85vh] overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-900 rounded-lg shadow-xl scrollbar-hide"
+        >
         <DialogHeader className="px-4 sm:px-6 pt-6 pb-4">
           <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100">My Startup Profile</DialogTitle>
           <DialogDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -268,8 +281,14 @@ const MyStartupProfileModal = ({ isOpen, onClose }) => {
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirmModal}
+        onClose={() => setShowDeleteConfirmModal(false)}
+        onConfirm={handleConfirmDeleteAction}
+      />
+    </>
   );
 };
 
