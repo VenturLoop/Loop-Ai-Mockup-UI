@@ -516,6 +516,19 @@ export default function Component() {
             {!sidebarOpen && <NewTaskButton className="ml-2 hidden sm:flex" iconOnly={isSmallScreen} />}
           </div>
 
+          {/* Centered Button */}
+          <div className="flex-1 flex justify-center items-center">
+            <a
+              href="https://test.venturloop.com/pricing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-0.5"
+            >
+              <Sparkles className="w-4 h-4" />
+              Get founder pass
+            </a>
+          </div>
+
           {/* Right Side - Action Buttons (Mobile Optimized) */}
           <div className="flex items-center gap-2">
             {/* Dark Mode Toggle - Always visible */}
@@ -558,8 +571,11 @@ export default function Component() {
                   <Download className="w-4 h-4" />
                   <span>Download App</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2">
-                  <Moon className="w-4 h-4" />
+                <DropdownMenuItem
+                  onClick={() => window.open("https://test.venturloop.com/pricing", "_blank")}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4 text-purple-500" />
                   <span>Get Founder Pass</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
