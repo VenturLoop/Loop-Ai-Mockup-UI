@@ -31,7 +31,7 @@ const MyBookmarksModal = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl w-full p-0 bg-white dark:bg-gray-900 rounded-lg shadow-xl overflow-hidden mx-4 sm:mx-0">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-xl mx-auto sm:w-full sm:mx-0 p-0 bg-white dark:bg-gray-900 rounded-lg shadow-xl overflow-hidden">
         <DialogHeader className="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 dark:border-zinc-700">
           <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             My Bookmarks
