@@ -42,6 +42,7 @@ import { AppDownloadModal } from "./components/app-download-modal.jsx"
 import LoginModal from "./components/modals/LoginModal.jsx";
 import MyBookmarksModal from "./components/modals/MyBookmarksModal.jsx"; // Added import
 import MyUpdatesModal from "./components/modals/MyUpdatesModal.jsx"; // Added import
+import MyStartupProfileModal from "./components/modals/MyStartupProfileModal.jsx";
 import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
 import { NeedHelpModal } from "./components/need-help-modal.jsx"
 
@@ -57,6 +58,7 @@ export default function Component() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showMyBookmarksModal, setShowMyBookmarksModal] = useState(false); // Added state
   const [showMyUpdatesModal, setShowMyUpdatesModal] = useState(false); // Added state
+  const [showMyStartupProfileModal, setShowMyStartupProfileModal] = useState(false);
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
   const inputRef = useRef(null)
@@ -356,8 +358,9 @@ export default function Component() {
                   <span>My Bookmarks</span>
                   <ChevronRight className="w-4 h-4 ml-auto" />
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-3 text-sm py-2">
+                <DropdownMenuItem onClick={() => setShowMyStartupProfileModal(true)} className="flex items-center gap-3 text-sm py-2">
                   <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
+                    {/* You might need to adjust the inner div color or use an icon later */}
                     <div className="w-2 h-2 bg-gray-400 rounded"></div>
                   </div>
                   <span>My Startup Profile</span>
@@ -404,7 +407,7 @@ export default function Component() {
                   <Bookmark className="w-4 h-4 text-gray-500" />
                   <span>My Bookmarks</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2 text-sm">
+                <DropdownMenuItem onClick={() => setShowMyStartupProfileModal(true)} className="flex items-center gap-2 text-sm">
                   <UserCircle className="w-4 h-4 text-gray-500" />
                   <span>My Startup Profile</span>
                 </DropdownMenuItem>
@@ -763,6 +766,10 @@ export default function Component() {
       <MyUpdatesModal
         isOpen={showMyUpdatesModal}
         onClose={() => setShowMyUpdatesModal(false)}
+      />
+      <MyStartupProfileModal
+        isOpen={showMyStartupProfileModal}
+        onClose={() => setShowMyStartupProfileModal(false)}
       />
     </div>
   )
