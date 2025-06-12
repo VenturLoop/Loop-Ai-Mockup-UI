@@ -29,6 +29,7 @@ import {
   Paperclip,
   Mic,
   Lightbulb,
+  MessageSquare, // Added icon
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -40,9 +41,10 @@ import {
 } from "@/components/ui/dropdown-menu.jsx"
 import { AppDownloadModal } from "./components/app-download-modal.jsx"
 import LoginModal from "./components/modals/LoginModal.jsx";
-import MyBookmarksModal from "./components/modals/MyBookmarksModal.jsx"; // Added import
-import MyUpdatesModal from "./components/modals/MyUpdatesModal.jsx"; // Added import
+import MyBookmarksModal from "./components/modals/MyBookmarksModal.jsx";
+import MyUpdatesModal from "./components/modals/MyUpdatesModal.jsx";
 import MyStartupProfileModal from "./components/modals/MyStartupProfileModal.jsx";
+import FeedbackModal from "@/components/modals/FeedbackModal.jsx";
 import { BuyLimitModal } from "./components/buy-limit-modal.jsx"
 import { NeedHelpModal } from "./components/need-help-modal.jsx"
 import LimitUsageModal from "./components/modals/LimitUsageModal.jsx";
@@ -51,15 +53,15 @@ export default function Component() {
   const { isDark, toggleDarkMode, sidebarOpen, setSidebarOpen: contextSetSidebarOpen, toggleSidebar } = useAppContext()
   const isMobile = useIsMobile() // Use the hook for 768px breakpoint
   const [searchQuery, setSearchQuery] = useState("")
-  // State for tracking if the screen is below the 'sm' breakpoint (640px), used for more granular responsive adjustments.
-  const [isSmallScreen, setIsSmallScreen] = useState(false) // Keep for 640px breakpoint
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
   const [showChat, setShowChat] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [showDownloadModal, setShowDownloadModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showMyBookmarksModal, setShowMyBookmarksModal] = useState(false); // Added state
-  const [showMyUpdatesModal, setShowMyUpdatesModal] = useState(false); // Added state
+  const [showMyBookmarksModal, setShowMyBookmarksModal] = useState(false);
+  const [showMyUpdatesModal, setShowMyUpdatesModal] = useState(false);
   const [showMyStartupProfileModal, setShowMyStartupProfileModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showBuyLimitModal, setShowBuyLimitModal] = useState(false)
   const [showNeedHelpModal, setShowNeedHelpModal] = useState(false)
   const [showLimitUsageModal, setShowLimitUsageModal] = useState(false);
@@ -67,7 +69,6 @@ export default function Component() {
   const inputContainerRef = useRef(null)
   const [selectedAgent, setSelectedAgent] = useState("Loop Pro")
 
-  // Sample chat messages
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -84,25 +85,19 @@ export default function Component() {
     },
   ])
 
-  const [prevIsMobile, setPrevIsMobile] = useState(isMobile); // To track changes in isMobile from the hook
+  const [prevIsMobile, setPrevIsMobile] = useState(isMobile);
 
-  // Effect for managing screen size-dependent states (isSmallScreen) and sidebar behavior on mobile transitions.
-  // It checks for viewport width for 'isSmallScreen' and handles auto-closing the sidebar
-  // when transitioning from desktop to mobile view.
   useEffect(() => {
     const checkSmallScreenSize = () => {
       const small = window.innerWidth < 640
       setIsSmallScreen(small)
     }
-
-    // Handle closing sidebar when transitioning to mobile view
     if (isMobile && !prevIsMobile && sidebarOpen) {
       contextSetSidebarOpen(false);
     }
-    setPrevIsMobile(isMobile); // Update previous mobile state
-
-    checkSmallScreenSize() // Initial check for small screen
-    window.addEventListener("resize", checkSmallScreenSize) // Only for small screen
+    setPrevIsMobile(isMobile);
+    checkSmallScreenSize()
+    window.addEventListener("resize", checkSmallScreenSize)
     return () => {
       window.removeEventListener("resize", checkSmallScreenSize)
     }
@@ -121,7 +116,7 @@ export default function Component() {
       },
     ])
     if (isMobile && sidebarOpen) {
-      toggleSidebar() // Use context toggle
+      toggleSidebar()
     }
     if (inputRef.current) {
       inputRef.current.focus()
@@ -130,11 +125,7 @@ export default function Component() {
 
   const handleSendMessage = useCallback(() => {
     if (!searchQuery.trim()) return
-
-    // Add user message
     setMessages((prevMessages) => [...prevMessages, { role: "user", content: searchQuery }])
-
-    // Simulate AI response after a short delay
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -144,7 +135,6 @@ export default function Component() {
         },
       ])
     }, 1000)
-
     setSearchQuery("")
     setShowChat(true)
   }, [searchQuery, setMessages, setSearchQuery, setShowChat])
@@ -179,7 +169,6 @@ export default function Component() {
     setShowNeedHelpModal(true)
   }, [setShowNeedHelpModal])
 
-  // Sample data for the "Latest Tasks" list in the sidebar.
   const tasks = [
     {
       title: "Warning Messages Samples",
@@ -209,11 +198,9 @@ export default function Component() {
     },
   ]
 
-  // Logo and Agent component - reused in both sidebar and header
   function LogoAndAgentComponent({ compact = false, selectedAgent, setSelectedAgent }) {
     const agentDisplayName = selectedAgent === "Loop Pro" ? "Agent 11" : "Agent 5";
     const agentCompactDisplayName = selectedAgent === "Loop Pro" ? "A11" : "A5";
-
     const handleSetLoopPro = useCallback(() => setSelectedAgent("Loop Pro"), [setSelectedAgent]);
     const handleSetLoopMini = useCallback(() => setSelectedAgent("Loop Mini"), [setSelectedAgent]);
 
@@ -264,7 +251,6 @@ export default function Component() {
   }
   const LogoAndAgent = memo(LogoAndAgentComponent);
   LogoAndAgent.displayName = "LogoAndAgent";
-  // New Chat button component - reused in both sidebar and header
   const NewTaskButton = memo(({ className = "", iconOnly = false }) => (
     <Button className={`bg-blue-500 hover:bg-blue-600 text-white ${className}`} onClick={handleNewTask}>
       <Plus className={`${iconOnly ? "w-5 h-5" : "w-4 h-4 mr-2"}`} />
@@ -275,12 +261,9 @@ export default function Component() {
 
   return (
     <div className="flex h-screen w-full bg-white dark:bg-black text-black dark:text-white overflow-hidden">
-      {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={toggleSidebar} />
       )}
-
-      {/* Sidebar */}
       <div
         className={`
         ${isMobile ? "fixed" : "relative"}
@@ -291,9 +274,7 @@ export default function Component() {
         ${isMobile && !sidebarOpen ? "-translate-x-full" : "translate-x-0"}
       `}
       >
-        {/* Sidebar Header */}
         <div className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-zinc-700 min-h-[60px]">
-          {/* Hamburger Menu - Always Visible */}
           <Button
             variant="ghost"
             size="icon"
@@ -302,20 +283,16 @@ export default function Component() {
           >
             <Menu className="w-5 h-5" />
           </Button>
-
-          {/* Logo and Agent - Only when expanded */}
           {sidebarOpen && (
             <div className="flex items-center gap-2 flex-1 ml-2 overflow-hidden">
               <LogoAndAgent selectedAgent={selectedAgent} setSelectedAgent={setSelectedAgent} />
             </div>
           )}
-
-          {/* Mobile Close Button - Only on mobile when expanded */}
           {isMobile && sidebarOpen && (
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleSidebar} // Use context toggle
+              onClick={toggleSidebar}
               className="h-8 w-8 md:hidden ml-2"
             >
               <X className="w-4 h-4" />
@@ -323,7 +300,6 @@ export default function Component() {
           )}
         </div>
 
-        {/* New Chat Button - Only when expanded */}
         {sidebarOpen && (
           <div className="p-3 border-b border-gray-200 dark:border-zinc-700">
             <NewTaskButton className="w-full justify-center" />
@@ -353,7 +329,7 @@ export default function Component() {
                   <span>Updates</span>
                   <ChevronRight className="w-4 h-4 ml-auto" />
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowMyBookmarksModal(true)} className="flex items-center gap-3 text-sm py-2"> {/* Added onClick */}
+                <DropdownMenuItem onClick={() => setShowMyBookmarksModal(true)} className="flex items-center gap-3 text-sm py-2">
                   <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
                     <div className="w-2 h-2 bg-gray-400 rounded"></div>
                   </div>
@@ -362,10 +338,14 @@ export default function Component() {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setShowMyStartupProfileModal(true)} className="flex items-center gap-3 text-sm py-2">
                   <div className="w-4 h-4 bg-gray-100 dark:bg-zinc-700 rounded flex items-center justify-center">
-                    {/* You might need to adjust the inner div color or use an icon later */}
-                    <div className="w-2 h-2 bg-gray-400 rounded"></div>
+                    <UserCircle className="w-3 h-3 text-gray-500" />
                   </div>
                   <span>My Startup Profile</span>
+                  <ChevronRight className="w-4 h-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShowFeedbackModal(true)} className="flex items-center gap-3 text-sm py-2">
+                  <MessageSquare className="w-4 h-4 text-gray-500" />
+                  <span>Leave Feedback</span>
                   <ChevronRight className="w-4 h-4 ml-auto" />
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -405,13 +385,17 @@ export default function Component() {
                   <Bell className="w-4 h-4 text-blue-500" />
                   <span>Updates</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowMyBookmarksModal(true)} className="flex items-center gap-2 text-sm"> {/* Added onClick */}
+                <DropdownMenuItem onClick={() => setShowMyBookmarksModal(true)} className="flex items-center gap-2 text-sm">
                   <Bookmark className="w-4 h-4 text-gray-500" />
                   <span>My Bookmarks</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setShowMyStartupProfileModal(true)} className="flex items-center gap-2 text-sm">
                   <UserCircle className="w-4 h-4 text-gray-500" />
                   <span>My Startup Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShowFeedbackModal(true)} className="flex items-center gap-2 text-sm">
+                  <MessageSquare className="w-4 h-4 text-gray-500" />
+                  <span>Leave Feedback</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleNeedHelp} className="flex items-center gap-2 text-sm">
                   <div className="w-4 h-4 bg-green-100 dark:bg-green-900/50 rounded flex items-center justify-center">
@@ -428,14 +412,12 @@ export default function Component() {
           </div>
         )}
 
-        {/* Scrollable Task List - Only when expanded */}
         {sidebarOpen && (
           <div className="flex-1 overflow-y-auto px-4 pt-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Latest Tasks</h2>
               <button className="text-blue-600 dark:text-blue-400 text-xs hover:underline">Clear</button>
             </div>
-
             <div className="space-y-4">
               {tasks.map((task, index) => (
                 <div
@@ -466,7 +448,6 @@ export default function Component() {
           </div>
         )}
 
-        {/* Sidebar Footer - Responsive */}
         {sidebarOpen && (
           <div
             className={`border-t border-gray-200 dark:border-zinc-800 ${isMobile ? "p-2" : "p-4"} flex flex-col ${isMobile ? "space-y-2" : "space-y-3"}`}
@@ -475,22 +456,20 @@ export default function Component() {
               className="cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 -m-2 rounded-md"
               onClick={() => setShowLimitUsageModal(true)}
             >
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2"> {/* Changed to gray background */}
-                <div className="bg-blue-600 h-2 rounded-full" style={{ width: "0%" }}></div> {/* Inner bar is blue */}
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-blue-600 h-2 rounded-full" style={{ width: "0%" }}></div>
               </div>
               <div className="flex justify-between items-center text-xs mt-1">
                 <span className="text-gray-600 dark:text-gray-400">Daily Task Limit(0/3)</span>
               </div>
             </div>
-
             <button
               onClick={handleBuyLimit}
-              className={`bg-blue-600 hover:bg-blue-700 text-white text-sm ${isMobile ? "py-1.5" : "py-2"} rounded mt-2`} // Added mt-2 for spacing
+              className={`bg-blue-600 hover:bg-blue-700 text-white text-sm ${isMobile ? "py-1.5" : "py-2"} rounded mt-2`}
             >
               Buy Limit
             </button>
-
-            <div className={`text-xs text-gray-500 dark:text-gray-400 ${isMobile ? "space-y-0.5" : "space-y-1"} mt-2`}> {/* Added mt-2 */}
+            <div className={`text-xs text-gray-500 dark:text-gray-400 ${isMobile ? "space-y-0.5" : "space-y-1"} mt-2`}>
               {!isMobile && (
                 <div className="flex gap-2 flex-wrap">
                   <span className="hover:underline cursor-pointer">Privacy Policy</span>
@@ -504,27 +483,17 @@ export default function Component() {
         )}
       </div>
 
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 transition-all duration-500 ease-in-out">
-        {/* Top Header - Mobile Optimized */}
         <header className="bg-white dark:bg-black border-b border-gray-200 dark:border-zinc-800 px-3 sm:px-6 py-3 flex items-center justify-between relative z-30">
-          {/* Left Side - Logo and Agent (Only when sidebar is closed) */}
           <div className="flex items-center gap-2">
-            {/* Mobile Hamburger - Only on mobile */}
             {isMobile && (
               <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8 md:hidden">
                 <Menu className="w-4 h-4" />
               </Button>
             )}
-
-            {/* Logo and Agent - Only when sidebar is closed */}
             {!sidebarOpen && <LogoAndAgent compact={isSmallScreen} selectedAgent={selectedAgent} setSelectedAgent={setSelectedAgent} />}
-
-            {/* New Chat Button - Only when sidebar is closed */}
             {!sidebarOpen && <NewTaskButton className="ml-2 hidden sm:flex" iconOnly={isSmallScreen} />}
           </div>
-
-          {/* Centered Button */}
           <div className="flex-1 flex justify-center items-center">
             <a
               href="https://test.venturloop.com/pricing"
@@ -536,15 +505,10 @@ export default function Component() {
               Get founder pass
             </a>
           </div>
-
-          {/* Right Side - Action Buttons (Mobile Optimized) */}
           <div className="flex items-center gap-2">
-            {/* Dark Mode Toggle - Always visible */}
             <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="h-8 w-8">
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
-
-            {/* Download App - Visible on medium screens */}
             <button
               onClick={handleDownloadApp}
               className="hidden sm:flex px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-full items-center gap-1"
@@ -553,13 +517,9 @@ export default function Component() {
               <span className="hidden md:inline">Download App</span>
               <span className="md:hidden">App</span>
             </button>
-
-            {/* Login - Visible on medium screens */}
             <button onClick={() => setShowLoginModal(true)} className="hidden sm:flex px-3 py-2 text-sm border border-gray-200 dark:border-zinc-700 rounded-full hover:bg-gray-50 dark:hover:bg-zinc-800">
               Login
             </button>
-
-            {/* Mobile Menu Dropdown - Only on small screens */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 sm:hidden">
@@ -600,9 +560,7 @@ export default function Component() {
           </div>
         </header>
 
-        {/* Center Content */}
         <div className="flex-1 flex flex-col relative overflow-hidden">
-          {/* Welcome Screen - Only shown when no chat is active */}
           {!showChat && (
             <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-4 sm:py-8">
               <div className="text-center max-w-2xl w-full bg-slate-50 dark:bg-zinc-800/50 rounded-xl border border-slate-200 dark:border-zinc-700 p-6 sm:p-8 md:p-10 mx-auto">
@@ -616,10 +574,8 @@ export default function Component() {
             </div>
           )}
 
-          {/* Chat UI - Only shown when chat is active */}
           {showChat && (
             <div className="flex-1 flex flex-col overflow-hidden">
-              {/* Chat Messages - Add bottom padding for fixed input */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32 mx-auto max-w-4xl">
                 {messages.map((message, index) => (
                   <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} mb-4`}>
@@ -650,7 +606,6 @@ export default function Component() {
             </div>
           )}
 
-          {/* Fixed Chat Input - Positioned relative to main content area */}
           {showChat && (
             <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-zinc-800 p-3 sm:p-4 z-40">
               <div className="max-w-4xl mx-auto">
@@ -710,7 +665,6 @@ export default function Component() {
             </div>
           )}
 
-          {/* Fixed Welcome Input Box - Positioned relative to main content area */}
           {!showChat && (
             <div className="absolute bottom-4 sm:bottom-6 left-4 right-4 sm:left-6 sm:right-6 z-40">
               <div className="max-w-2xl mx-auto">
@@ -765,28 +719,18 @@ export default function Component() {
         </div>
       </div>
 
-      {/* App Download Modal */}
       <AppDownloadModal isOpen={showDownloadModal} onClose={() => setShowDownloadModal(false)} />
-
-      {/* Login Modal */}
       <LoginModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onOpenAppDownloadModal={handleOpenAppDownloadModal}
       />
-
-      {/* Buy Limit Modal */}
       <BuyLimitModal isOpen={showBuyLimitModal} onClose={() => setShowBuyLimitModal(false)} />
-
-      {/* Need Help Modal */}
       <NeedHelpModal isOpen={showNeedHelpModal} onClose={() => setShowNeedHelpModal(false)} />
-
-      {/* My Bookmarks Modal */}
       <MyBookmarksModal
         isOpen={showMyBookmarksModal}
         onClose={() => setShowMyBookmarksModal(false)}
       />
-      {/* My Updates Modal */}
       <MyUpdatesModal
         isOpen={showMyUpdatesModal}
         onClose={() => setShowMyUpdatesModal(false)}
@@ -796,6 +740,7 @@ export default function Component() {
         onClose={() => setShowMyStartupProfileModal(false)}
       />
       <LimitUsageModal isOpen={showLimitUsageModal} onClose={() => setShowLimitUsageModal(false)} />
+      <FeedbackModal isOpen={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} />
     </div>
   )
 }
