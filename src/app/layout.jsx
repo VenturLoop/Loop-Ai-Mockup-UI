@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
   return (
     <AppProvider>
       <ThemeHtmlTag>
+        <meta name="google-site-verification" content="snd-I258bhB6IOfksIhOgqUy-8AiQJU4hS2J5TnvXIE" />
         <body>
           {children}
         </body>
